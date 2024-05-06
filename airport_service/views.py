@@ -5,6 +5,7 @@ from django.db.models import F, Count
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from airport_service.filters import AirportFilter, FlightFilter
 from airport_service.models import (
@@ -16,6 +17,7 @@ from airport_service.models import (
     Flight,
     Order,
 )
+from airport_service.permissions import IsAdminOrIfAuthenticatedReadOnly
 
 from airport_service.serializers import (
     AirplaneTypeSerializer,
@@ -40,12 +42,16 @@ class AirplaneTypeViewSet(viewsets.ModelViewSet):
 
     queryset = AirplaneType.objects.all()
     serializer_class = AirplaneTypeSerializer
+    permission_classes = (IsAdminOrIfAuthenticatedReadOnly, )
+    authentication_classes = (JWTAuthentication,)
 
 
 class CrewViewSet(viewsets.ModelViewSet):
 
     queryset = Crew.objects.all()
     serializer_class = CrewSerializer
+    permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
+    authentication_classes = (JWTAuthentication,)
 
     def get_serializer_class(self):
 
@@ -61,12 +67,15 @@ class AirportViewSet(viewsets.ModelViewSet):
     serializer_class = AirportSerializer
     filter_backends = (DjangoFilterBackend, )
     filterset_class = AirportFilter
+    permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
+    authentication_classes = (JWTAuthentication,)
 
 
 class RouteViewSet(viewsets.ModelViewSet):
 
     queryset = Route.objects.all().select_related("source", "destination")
     serializer_class = RouteSerializer
+    authentication_classes = (JWTAuthentication,)
 
     def get_serializer_class(self):
 
@@ -80,6 +89,8 @@ class AirplaneViewSet(viewsets.ModelViewSet):
 
     queryset = Airplane.objects.all().select_related("airplane")
     serializer_class = AirplaneSerializer
+    permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
+    authentication_classes = (JWTAuthentication,)
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -111,6 +122,8 @@ class FlightViewSet(viewsets.ModelViewSet):
     serializer_class = FlightSerializer
     filter_backends = (DjangoFilterBackend, )
     filterset_class = FlightFilter
+    permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
+    authentication_classes = (JWTAuthentication,)
 
     def get_queryset(self):
 
@@ -149,6 +162,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     )
     serializer_class = OrderSerializer
     pagination_class = OrderPagination
+    authentication_classes = (JWTAuthentication,)
 
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
