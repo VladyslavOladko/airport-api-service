@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from django.db.models import F, Count
 
 from django_filters.rest_framework import DjangoFilterBackend
