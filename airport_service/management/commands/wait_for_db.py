@@ -1,7 +1,3 @@
-"""
-Django command to wait for the database to come up
-"""
-
 import time
 
 from django.db import connections
@@ -11,7 +7,9 @@ from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):
-
+    """
+    Django command to wait for the database to come up
+    """
     def handle(self, *args, **options):
         self.stdout.write("Wait for database...")
         max_attempts = 10
