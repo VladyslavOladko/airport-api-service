@@ -46,7 +46,3 @@ docker-compose up
 * Managing orders and tickets
 * Permissions for admin and authenticated user`s
 * Filtering flight and airports
-
-## Demo
-
-
